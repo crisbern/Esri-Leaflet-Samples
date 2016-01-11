@@ -1,0 +1,23 @@
+{
+  "allPlaceholder": "",
+  "showInfoWindowOnSelect": true,
+  "sources": [
+    {
+      "layerId": "80days_7748",
+      "url": "http://services.arcgis.com/pMnvm7HXxTmNXxGi/arcgis/rest/services/80days/FeatureServer/1",
+      "name": "80days - Stops",
+      "placeholder": "Search for a place",
+      "searchFields": [
+        "Town",
+        "Day_of_travel",
+        "Date_",
+        "Text_"
+      ],
+      "displayField": "Town",
+      "exactMatch": false,
+      "searchInCurrentMapExtent": false,
+      "maxResults": 1,
+      "type": "query"
+    }
+  ]
+}

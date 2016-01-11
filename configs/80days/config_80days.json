@@ -1,0 +1,5 @@
+﻿{
+	"distance_table":"user_distance",
+	"path_layer": "path",
+	"stops_layer": "stops"
+}
