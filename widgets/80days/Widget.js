@@ -34,13 +34,17 @@ define(['dojo/_base/declare',
 
               var layerName = lang.getObject('stops_layer', false, this.config);
               var operationalLayer = lang.getObject('map.itemInfo.itemData.operationalLayers', false, this);
-              this.stops_layer = new FeatureLayer(this._getLayer(operationalLayer, layerName).url, { mode: FeatureLayer.MODE_SELECTION });
-              this.stops_layer.setRenderer(this._getLayer(operationalLayer, layerName).layerObject.renderer);
+              var layer = this._getLayer(operationalLayer, layerName);
+              this.stops_layer = new FeatureLayer(layer.url, { mode: FeatureLayer.MODE_SELECTION });
+              this.stops_layer.setRenderer(layer.layerObject.renderer);
+              this.map.removeLayer(layer);
               this.map.addLayer(this.stops_layer);
               
               var layerName = lang.getObject('path_layer', false, this.config);
-              this.path_layer = new FeatureLayer(this._getLayer(operationalLayer, layerName).url, { mode: FeatureLayer.MODE_SELECTION });
-              this.path_layer.setRenderer(this._getLayer(operationalLayer, layerName).layerObject.renderer);
+              var layer = this._getLayer(operationalLayer, layerName);
+              this.path_layer = new FeatureLayer(layer.url, { mode: FeatureLayer.MODE_SELECTION });
+              this.path_layer.setRenderer(layer.layerObject.renderer);
+              this.map.removeLayer(layer);
               this.map.addLayer(this.path_layer);
           },
 
