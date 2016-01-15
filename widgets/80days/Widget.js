@@ -99,16 +99,28 @@ define(['dojo/_base/declare',
                   var operationalLayer = lang.getObject('map.itemInfo.itemData.operationalLayers', false, this);
 
                   this.stops_layer.selectFeatures(q)
-                  this.path_layer.selectFeatures(q)
+                  this.path_layer.selectFeatures(q, FeatureLayer.SELECTION_NEW, lang.hitch(this, function(g){
+                      var q = new Query();
+                      q.where = 'travel_distance >' + total * 1000;
+                      q.orderByFields = ['travel_distance ASC'];
+                      q.num = 1;
+                      q.outFields = ["means_of_travel", 'travel_distance'];
+                      var layerName = lang.getObject('stops_layer', false, this.config);
+                      var operationalLayer = lang.getObject('map.itemInfo.itemData.operationalLayers', false, this);
+                      this.path_layer.selectFeatures(q, FeatureLayer.SELECTION_ADD, lang.hitch(this, function(g){
+                          g = this.path_layer.getSelectedFeatures();
+                          if (g.length > 0) {
+                              var remainingLength = total * 1000 - g[0].attributes.travel_distance;
+                              console.debug(remainingLength);
+                          }
+                      }))
+                  }))
+                  
               }));
             
               
               /*
-2) query total km extent
-setSelectionSymbol(symbol) is its symbol with alpha = 0
-4) query path <= total km -> select 
 4) get next path slice of remaining km -> select
-5) query stops <= total km -> select
 */
           },
           _getLayer: function (items, name) {
