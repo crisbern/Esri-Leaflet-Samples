@@ -37,14 +37,14 @@ define(['dojo/_base/declare',
               var layer = this._getLayer(operationalLayer, layerName);
               this.stops_layer = new FeatureLayer(layer.url, { mode: FeatureLayer.MODE_SELECTION });
               this.stops_layer.setRenderer(layer.layerObject.renderer);
-              this.map.removeLayer(layer);
+              this.map.removeLayer(this._getLayer(operationalLayer, layerName));
               this.map.addLayer(this.stops_layer);
               
               var layerName = lang.getObject('path_layer', false, this.config);
               var layer = this._getLayer(operationalLayer, layerName);
               this.path_layer = new FeatureLayer(layer.url, { mode: FeatureLayer.MODE_SELECTION });
               this.path_layer.setRenderer(layer.layerObject.renderer);
-              this.map.removeLayer(layer);
+              this.map.removeLayer(this._getLayer(operationalLayer, layerName));
               this.map.addLayer(this.path_layer);
           },
 
@@ -104,28 +104,10 @@ define(['dojo/_base/declare',
                   var operationalLayer = lang.getObject('map.itemInfo.itemData.operationalLayers', false, this);
 
                   this.stops_layer.selectFeatures(q)
-                  this.path_layer.selectFeatures(q)/*, FeatureLayer.SELECTION_NEW, lang.hitch(this, function(g){
-                      g = this.path_layer.getSelectedFeatures();
-                      if (g.length > 0) {
-                          var max = 0;
-                          for (var i = 1; i < g.length; i++) {
-                              if (g[i].attributes.travel_distance > g[max].attributes.travel_distance) {
-                                  max = i;
-                              }
-                          }
-
-                          var cutPoint = total * 1000 - g[max].attributes.travel_distance;
-
-                      }
-                      
-                  }))*/
+                  this.path_layer.selectFeatures(q)
                   
               }));
             
-              
-              /*
-4) get next path slice of remaining km -> select
-*/
           },
           _getLayer: function (items, name) {
               // filter all the items with name and return the first url
