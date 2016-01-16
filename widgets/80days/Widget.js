@@ -21,10 +21,10 @@ define(['dojo/_base/declare',
     'jimu/BaseWidget',
     'esri/TimeExtent',
     'esri/dijit/TimeSlider',
-    'dojo/_base/array','esri/layers/FeatureLayer',
+    'dojo/_base/array','esri/layers/FeatureLayer', 'esri/geometry/geometryEngineAsync',
     'dojo/_base/lang', 'esri/request', 'esri/tasks/query', 'esri/tasks/StatisticDefinition', 'esri/tasks/QueryTask', "esri/symbols/SimpleMarkerSymbol", "esri/symbols/SimpleFillSymbol", "esri/Color"
 ],
-  function (declare, html, query, _WidgetsInTemplateMixin, BaseWidget, TimeExtent, TimeSlider, array, FeatureLayer, lang, esriRequest, Query, StatisticDefinition, QueryTask, SimpleMarkerSymbol, SimpleFillSymbol , Color) {
+  function (declare, html, query, _WidgetsInTemplateMixin, BaseWidget, TimeExtent, TimeSlider, array, FeatureLayer, geometryEngineAsync, lang, esriRequest, Query, StatisticDefinition, QueryTask, SimpleMarkerSymbol, SimpleFillSymbol, Color) {
       var clazz = declare([BaseWidget, _WidgetsInTemplateMixin], {
 
           _hasContent: null,
@@ -98,27 +98,27 @@ define(['dojo/_base/declare',
                   var total = lang.getObject('attributes.TotalKm', false, totalF.features[0]);
                   
                   var q = new Query();
-                  q.where = 'travel_distance <=' + total*1000;
+                  q.where = 'travel_distance <=' + total * 1000;
+                  q.orderBy = ['travel_distance']
                   var layerName = lang.getObject('stops_layer', false, this.config);
                   var operationalLayer = lang.getObject('map.itemInfo.itemData.operationalLayers', false, this);
 
                   this.stops_layer.selectFeatures(q)
-                  this.path_layer.selectFeatures(q, FeatureLayer.SELECTION_NEW, lang.hitch(this, function(g){
-                      var q = new Query();
-                      q.where = 'travel_distance >' + total * 1000;
-                      q.orderByFields = ['travel_distance ASC'];
-                      q.num = 1;
-                      q.outFields = ["means_of_travel", 'travel_distance'];
-                      var layerName = lang.getObject('stops_layer', false, this.config);
-                      var operationalLayer = lang.getObject('map.itemInfo.itemData.operationalLayers', false, this);
-                      this.path_layer.selectFeatures(q, FeatureLayer.SELECTION_ADD, lang.hitch(this, function(g){
-                          g = this.path_layer.getSelectedFeatures();
-                          if (g.length > 0) {
-                              var remainingLength = total * 1000 - g[0].attributes.travel_distance;
-                              console.debug(remainingLength);
+                  this.path_layer.selectFeatures(q)/*, FeatureLayer.SELECTION_NEW, lang.hitch(this, function(g){
+                      g = this.path_layer.getSelectedFeatures();
+                      if (g.length > 0) {
+                          var max = 0;
+                          for (var i = 1; i < g.length; i++) {
+                              if (g[i].attributes.travel_distance > g[max].attributes.travel_distance) {
+                                  max = i;
+                              }
                           }
-                      }))
-                  }))
+
+                          var cutPoint = total * 1000 - g[max].attributes.travel_distance;
+
+                      }
+                      
+                  }))*/
                   
               }));
             
